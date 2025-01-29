@@ -28,4 +28,8 @@ export type Config = {
   transcriptPostProcessingEnabled?: boolean
   transcriptPostProcessingProviderId?: CHAT_PROVIDER_ID
   transcriptPostProcessingPrompt?: string
+
+  siliconflowApiKey?: string
+  siliconflowBaseUrl?: string
+  siliconflowModel?: string
 }

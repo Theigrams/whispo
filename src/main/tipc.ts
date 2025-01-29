@@ -158,32 +158,40 @@ export const router = {
       const form = new FormData()
       form.append("file", new Blob([input.recording]), "audio.webm")
       form.append("response_format", "json")
-      form.append(
-        "model",
-        config.sttProviderId === "groq"
-          ? config.groqModel || "whisper-large-v3"
-          : config.openaiModel || "whisper-1",
-      )
 
-      const groqBaseUrl = config.groqBaseUrl || "https://api.groq.com/openai/v1"
-      const openaiBaseUrl = config.openaiBaseUrl || "https://api.openai.com/v1"
+      let url: string
+      let apiKey: string
+      let model: string
 
-      const transcriptResponse = await fetch(
-        config.sttProviderId === "groq"
-          ? `${groqBaseUrl}/audio/transcriptions`
-          : `${openaiBaseUrl}/audio/transcriptions`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${config.sttProviderId === "groq" ? config.groqApiKey : config.openaiApiKey}`,
-          },
-          body: form,
+      switch (config.sttProviderId) {
+        case "siliconflow":
+          url = `${config.siliconflowBaseUrl || "https://api.siliconflow.cn/v1"}/audio/transcriptions`
+          apiKey = config.siliconflowApiKey || ""
+          model = config.siliconflowModel || "FunAudioLLM/SenseVoiceSmall"
+          break
+        case "groq":
+          url = `${config.groqBaseUrl || "https://api.groq.com/openai/v1"}/audio/transcriptions`
+          apiKey = config.groqApiKey || ""
+          model = config.groqModel || "whisper-large-v3"
+          break
+        default:
+          url = `${config.openaiBaseUrl || "https://api.openai.com/v1"}/audio/transcriptions`
+          apiKey = config.openaiApiKey || ""
+          model = config.openaiModel || "whisper-1"
+      }
+
+      form.append("model", model)
+
+      const transcriptResponse = await fetch(url, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
         },
-      )
+        body: form,
+      })
 
       if (!transcriptResponse.ok) {
         const message = `${transcriptResponse.statusText} ${(await transcriptResponse.text()).slice(0, 300)}`
-
         throw new Error(message)
       }
 
