@@ -49,6 +49,19 @@ export function Component() {
             }}
           />
         </Control>
+
+        <Control label="Model" className="px-3">
+          <Input
+            type="text"
+            placeholder="whisper-1"
+            defaultValue={configQuery.data.openaiModel || "whisper-1"}
+            onChange={(e) => {
+              saveConfig({
+                openaiModel: e.currentTarget.value,
+              })
+            }}
+          />
+        </Control>
       </ControlGroup>
 
       <ControlGroup title="Groq">
@@ -76,6 +89,19 @@ export function Component() {
             }}
           />
         </Control>
+
+        <Control label="Model" className="px-3">
+          <Input
+            type="text"
+            placeholder="whisper-large-v3"
+            defaultValue={configQuery.data.groqModel || "whisper-large-v3"}
+            onChange={(e) => {
+              saveConfig({
+                groqModel: e.currentTarget.value,
+              })
+            }}
+          />
+        </Control>
       </ControlGroup>
 
       <ControlGroup title="Gemini">
@@ -99,6 +125,19 @@ export function Component() {
             onChange={(e) => {
               saveConfig({
                 geminiBaseUrl: e.currentTarget.value,
+              })
+            }}
+          />
+        </Control>
+
+        <Control label="Model" className="px-3">
+          <Input
+            type="text"
+            placeholder="gemini-1.5-pro"
+            defaultValue={configQuery.data.geminiModel || "gemini-1.5-pro"}
+            onChange={(e) => {
+              saveConfig({
+                geminiModel: e.currentTarget.value,
               })
             }}
           />

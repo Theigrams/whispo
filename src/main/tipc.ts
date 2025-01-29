@@ -156,15 +156,14 @@ export const router = {
 
       const config = configStore.get()
       const form = new FormData()
-      form.append(
-        "file",
-        new File([input.recording], "recording.webm", { type: "audio/webm" }),
-      )
+      form.append("file", new Blob([input.recording]), "audio.webm")
+      form.append("response_format", "json")
       form.append(
         "model",
-        config.sttProviderId === "groq" ? "whisper-large-v3" : "whisper-1",
+        config.sttProviderId === "groq"
+          ? config.groqModel || "whisper-large-v3"
+          : config.openaiModel || "whisper-1",
       )
-      form.append("response_format", "json")
 
       const groqBaseUrl = config.groqBaseUrl || "https://api.groq.com/openai/v1"
       const openaiBaseUrl = config.openaiBaseUrl || "https://api.openai.com/v1"
