@@ -1,4 +1,4 @@
-import fs from "fs"
+import * as fs from "fs"
 import { getRendererHandlers, tipc } from "@egoist/tipc/main"
 import { showPanelWindow, WINDOWS } from "./window"
 import {
@@ -9,7 +9,7 @@ import {
   systemPreferences,
   dialog,
 } from "electron"
-import path from "path"
+import * as path from "path"
 import { configStore, recordingsFolder } from "./config"
 import { Config, RecordingHistoryItem } from "../shared/types"
 import { RendererHandlers } from "./renderer-handlers"
@@ -18,6 +18,7 @@ import { state } from "./state"
 import { updateTrayIcon } from "./tray"
 import { isAccessibilityGranted } from "./utils"
 import { writeText } from "./keyboard"
+import { convertWebmToMp3 } from "@shared/audio-converter"
 
 const t = tipc.create()
 
@@ -155,8 +156,31 @@ export const router = {
       fs.mkdirSync(recordingsFolder, { recursive: true })
 
       const config = configStore.get()
+      const buffer = Buffer.from(input.recording)
+
+      let audioBuffer = buffer
+      let audioExtension = "webm"
+
+      // Convert to MP3 if using SiliconFlow API
+      if (config.sttProviderId === "siliconflow") {
+        try {
+          audioBuffer = await convertWebmToMp3(buffer)
+          audioExtension = "mp3"
+        } catch (error) {
+          console.error("Failed to convert audio:", error)
+          if (error.message.includes("FFmpeg is not installed")) {
+            throw new Error(
+              "FFmpeg is required for SiliconFlow API. Please install FFmpeg and try again.",
+            )
+          }
+          throw new Error(
+            "Failed to convert audio to MP3 format. Please ensure FFmpeg is properly installed.",
+          )
+        }
+      }
+
       const form = new FormData()
-      form.append("file", new Blob([input.recording]), "audio.webm")
+      form.append("file", new Blob([audioBuffer]), `audio.${audioExtension}`)
       form.append("response_format", "json")
 
       let url: string
