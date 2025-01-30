@@ -127,21 +127,20 @@ export function showMainWindow(url?: string) {
 }
 
 const panelWindowSize = {
-  width: 260,
-  height: 50,
+  width: 50,
+  height: 20,
 }
 
 const getPanelWindowPosition = () => {
-  // position the window top right
   const currentScreen = screen.getDisplayNearestPoint(
     screen.getCursorScreenPoint(),
   )
   const screenSize = currentScreen.workArea
   const position = {
     x: Math.floor(
-      screenSize.x + (screenSize.width - panelWindowSize.width) - 10,
+      screenSize.x + (screenSize.width / 2 - panelWindowSize.width / 2),
     ),
-    y: screenSize.y + 10,
+    y: screenSize.y + screenSize.height - panelWindowSize.height - 1,
   }
 
   return position
@@ -160,7 +159,8 @@ export function createPanelWindow() {
       closable: false,
       maximizable: false,
       frame: false,
-      // transparent: true,
+      transparent: true,
+      opacity: 0.7,
       paintWhenInitiallyHidden: true,
       // hasShadow: false,
       width: panelWindowSize.width,
@@ -177,6 +177,7 @@ export function createPanelWindow() {
     },
   })
 
+  win.setBackgroundColor("#000000")
   win.on("hide", () => {
     getRendererHandlers<RendererHandlers>(win.webContents).stopRecording.send()
   })
