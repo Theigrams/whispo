@@ -168,7 +168,10 @@ export const router = {
           audioExtension = "mp3"
         } catch (error) {
           console.error("Failed to convert audio:", error)
-          if (error.message.includes("FFmpeg is not installed")) {
+          if (
+            error instanceof Error &&
+            error.message.includes("FFmpeg is not installed")
+          ) {
             throw new Error(
               "FFmpeg is required for SiliconFlow API. Please install FFmpeg and try again.",
             )
