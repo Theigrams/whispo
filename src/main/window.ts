@@ -5,7 +5,7 @@ import {
   screen,
   app,
 } from "electron"
-import path from "path"
+import * as path from "path"
 import { getRendererHandlers } from "@egoist/tipc/main"
 import {
   makeKeyWindow,
