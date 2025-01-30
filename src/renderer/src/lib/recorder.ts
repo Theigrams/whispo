@@ -148,8 +148,6 @@ export class Recorder extends EventEmitter<{
       this.stream = null
     }
 
-
     this.emit("destroy")
-
   }
 }

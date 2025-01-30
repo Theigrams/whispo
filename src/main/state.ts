@@ -1,3 +1,3 @@
 export const state = {
-  isRecording: false
+  isRecording: false,
 }

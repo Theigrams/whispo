@@ -10,9 +10,7 @@ Currently building for macOS (Apple Silicon) and Windows x64.
 
 ## Preview
 
-
 https://github.com/user-attachments/assets/2344a817-f36c-42b0-9ebc-cdd6e926b7a0
-
 
 ## Features
 
