@@ -72,7 +72,7 @@ module.exports = {
   npmRebuild: false,
   publish: {
     provider: "github",
-    owner: "egoist",
+    owner: "Theigrams",
     repo: "whispo",
   },
   removePackageScripts: true,
